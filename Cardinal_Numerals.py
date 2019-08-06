@@ -17,6 +17,8 @@ n = int(input("Enter n :"))
 #Nhập region:
 region = input("Enter region: ")
 
+
+
 #Đếm số chữ số của n:
 def count_number(n):
     i = 10
@@ -106,11 +108,11 @@ def read_thousand_2(N, n):
     sohangtram = n % 1000
     if sohangngan == 0:
         ans = read_3_2(N, sohangtram)
-    elif sohangngan < 10 and sohangngan > 0:
+    elif sohangngan < 10 and sohangngan >0:
         ans = read_3_2(N, sohangngan) + " nghìn " + read_3_2(N, sohangtram)
-    elif sohangngan < 100 :
+    elif sohangngan < 100:
         ans = read_3_2(N, sohangngan) + " nghìn " + read_3_2(N, sohangtram)
-    elif sohangngan >=100:
+    elif sohangngan >= 100:
         ans = read_thousand(N,n)
     return ans
 
@@ -161,6 +163,14 @@ def read_billion(N, n):
 
 #Hàm tổng:
 def integer_to_vietnamese_numeral(n, region):
+    a = input("Do you want to activate Text-to-speech? (True or False ?)")
+    if a == "True" or a == "true":
+        activate_tts = True
+    elif a == "False" or a == "false":
+        activate_tts = False
+    else:
+        activate_tts = a
+
     if not isinstance(n, int):
         raise TypeError("Not an integer.")
     if n < 0:
@@ -182,14 +192,15 @@ def integer_to_vietnamese_numeral(n, region):
         else:
             raise ValueError
 
-    for i in result.split():
-        for j in N:
-            if i == j[0]:
-
-                sound = pygame.mixer.Sound(j[1])
-                sound.play()
-                pygame.time.wait(600)
-
+    if activate_tts == True:
+        for i in result.split():
+            for j in N:
+                if i == j[0]:
+                    sound = pygame.mixer.Sound(j[1])
+                    sound.play()
+                    pygame.time.wait(500)
+    elif activate_tts != "" and not isinstance(activate_tts, bool):
+        raise TypeError
     return result
 
 print(integer_to_vietnamese_numeral(n, region))
