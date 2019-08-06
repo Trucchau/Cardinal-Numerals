@@ -104,12 +104,14 @@ def read_thousand_2(N, n):
     ans = []
     sohangngan = n // 1000
     sohangtram = n % 1000
-    if sohangngan < 100:
-        ans = read_3_2(N, sohangngan) + " nghìn " + read_3_2(N, sohangtram)
-    elif sohangngan < 10:
-        ans = read_3_2(N, sohangngan) + "nghìn" + read_3_2(N, sohangtram)
-    elif sohangngan == 0:
+    if sohangngan == 0:
         ans = read_3_2(N, sohangtram)
+    elif sohangngan < 10 and sohangngan > 0:
+        ans = read_3_2(N, sohangngan) + " nghìn " + read_3_2(N, sohangtram)
+    elif sohangngan < 100 :
+        ans = read_3_2(N, sohangngan) + " nghìn " + read_3_2(N, sohangtram)
+    elif sohangngan >=100:
+        ans = read_thousand(N,n)
     return ans
 
 #Đọc số hàng triệu:
@@ -131,12 +133,14 @@ def read_million_2(N, n):
     ans = []
     sohangtrieu = n // 1000000
     sohangngan = n % 1000000
-    if sohangtrieu < 100:
+    if sohangtrieu == 0:
+        ans = read_thousand_2(N, sohangngan)
+    elif sohangtrieu < 10 and sohangtrieu > 0:
         ans = read_3_2(N, sohangtrieu) + " triệu " + read_thousand_2(N, sohangngan)
-    elif sohangngan < 10:
+    elif sohangtrieu < 100:
         ans = read_3_2(N, sohangtrieu) + " triệu " + read_thousand_2(N, sohangngan)
-    elif sohangngan == 0:
-        ans = read_thousand(N, sohangngan)
+    elif sohangtrieu >= 100:
+        ans = read_million(N,n)
     return ans
 
 
