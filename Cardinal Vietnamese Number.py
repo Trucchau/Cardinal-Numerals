@@ -1,3 +1,4 @@
+import os
 import pygame
 pygame.init()
 N = (["không", './vie/north/khong.ogg'], ["một", './vie/north/mot1.ogg'],
@@ -204,3 +205,4 @@ def integer_to_vietnamese_numeral(n, region):
     return result
 
 print(integer_to_vietnamese_numeral(n, region))
+os.system("PAUSE")
