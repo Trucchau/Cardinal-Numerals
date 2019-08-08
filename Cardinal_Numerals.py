@@ -1,22 +1,28 @@
 import pygame
 pygame.init()
-N = (["không", './vie/north/khong.ogg'], ["một", './vie/north/mot1.ogg'],
-     ["hai", './vie/north/hai.ogg'], ["ba", "./vie/north/ba.ogg"],
-     ["bốn", './vie/north/bon.ogg'], ["năm", "./vie/north/nam.ogg"],
-     ["sáu", "./vie/north/sau.ogg"], ["bảy", "./vie/north/bay.ogg"],
-     ["tám", "./vie/north/tam.ogg"], ["chín", "./vie/north/chin.ogg"],
-     ["mười", "./vie/north/muoi1.ogg"], ["lăm", "./vie/north/lam.ogg"],
-     ["lẻ", './vie/north/le.ogg'], ["mốt", './vie/north/mot2.ogg'],
-     ["linh", './vie/north/linh.ogg'], ["mươi", './vie/north/muoi2.ogg'],
-     ["nghìn", './vie/north/nghin.ogg'], ["ngàn", './vie/north/ngan.ogg'],
-     ["trăm", './vie/north/tram.ogg'], ["triệu", './vie/north/trieu.ogg'],
-     ["tỉ", './vie/north/ty.ogg'])
+N = (["không", './vie/north/khong.ogg', './sou/Khong.ogg'], ["một", './vie/north/mot1.ogg', './sou/Mot.ogg'],
+     ["hai", './vie/north/hai.ogg', './sou/Hai.ogg'], ["ba", "./vie/north/ba.ogg", './sou/Ba.ogg'],
+     ["bốn", './vie/north/bon.ogg', './sou/Bon.ogg'], ["năm", "./vie/north/nam.ogg", './sou/Nam.ogg'],
+     ["sáu", "./vie/north/sau.ogg", './sou/Sau.ogg'], ["bảy", "./vie/north/bay.ogg", './sou/Bay.ogg'],
+     ["tám", "./vie/north/tam.ogg", './sou/Tam.ogg'], ["chín", "./vie/north/chin.ogg", './sou/Chin.ogg', ],
+     ["mười", "./vie/north/muoi1.ogg", './sou/Muoi1.ogg'], ["lăm", "./vie/north/lam.ogg", './sou/Lam.ogg'],
+     ["lẻ", './vie/north/le.ogg', './sou/Le.ogg'], ["mốt", './vie/north/mot2.ogg', './sou/mot1.ogg'],
+     ["linh", './vie/north/linh.ogg', './sou/Linh.ogg'], ["mươi", './vie/north/muoi2.ogg', './sou/Muoi.ogg'],
+     ["nghìn", './vie/north/nghin.ogg', './sou/Nghin.ogg'], ["ngàn", './vie/north/ngan.ogg', './sou/Ngan.ogg'],
+     ["trăm", './vie/north/tram.ogg', './sou/Tram.ogg'], ["triệu", './vie/north/trieu.ogg', './sou/Trieu.ogg'],
+     ["tỉ", './vie/north/ty.ogg', './sou/Ti.ogg'])
 
 #Nhập số n:
 n = int(input("Enter n :"))
 #Nhập region:
 region = input("Enter region: ")
-
+a = input("Do you want to activate Text-to-speech? (True or False ?)") #Nhap cau hoi co muon kich hoat che do text to speech?
+if a == "True" or a == "true":
+    activate_tts = True                 #Chuyen doi cau tra loi sang kieu ky tu Boolean
+elif a == "False" or a == "false":
+    activate_tts = False
+else:
+    activate_tts = a                    #Neu cau tra loi khong phai la True /False, du lieu se khong chuyen doi ve kieu Boolean va raise TypeError
 
 
 #Đếm số chữ số của n:
@@ -84,7 +90,7 @@ def read_3_2(N, n):
     elif sodautien != 0:
         ans = read_3_1(N, n)
     elif sodautien == 0 and sothu2 == 0 and sothu3 == 0:
-        ans = ""
+        ans = " "
     return ans
 
 #Đọc số hàng ngàn:
@@ -162,14 +168,8 @@ def read_billion(N, n):
     return ans
 
 #Hàm tổng:
-def integer_to_vietnamese_numeral(n, region):
-    a = input("Do you want to activate Text-to-speech? (True or False ?)")
-    if a == "True" or a == "true":
-        activate_tts = True
-    elif a == "False" or a == "false":
-        activate_tts = False
-    else:
-        activate_tts = a
+def integer_to_vietnamese_numeral(n, region = 'north', activate_tts = False):
+
 
     if not isinstance(n, int):
         raise TypeError("Not an integer.")
@@ -183,24 +183,36 @@ def integer_to_vietnamese_numeral(n, region):
         result = read_2(N,n)
     else:
         if not isinstance(region, str):
-            raise TypeError      
+            raise TypeError
         if region == 'south':
             result1 = read_billion(N, n).replace("nghìn", "ngàn")
             result = result1.replace("linh", "lẻ")
+            if activate_tts == True:
+                for i in result.split():
+                    for j in N:
+                        if i == j[0]:
+                            sound = pygame.mixer.Sound(j[2])
+                            sound.play()
+                            pygame.time.wait(1100)
+                            pygame.mixer.stop()
+            elif activate_tts != "" and not isinstance(activate_tts, bool):
+                raise TypeError
         elif region == 'north' or region == '' or region == '':
             result = read_billion(N, n)
+            if activate_tts == True:
+                for i in result.split():
+                    for j in N:
+                        if i == j[0]:
+                            sound = pygame.mixer.Sound(j[1])
+                            sound.play()
+                            pygame.time.wait(750)
+                            pygame.mixer.stop()
+            elif activate_tts != "" and not isinstance(activate_tts, bool):
+                raise TypeError
         else:
             raise ValueError
 
-    if activate_tts == True:
-        for i in result.split():
-            for j in N:
-                if i == j[0]:
-                    sound = pygame.mixer.Sound(j[1])
-                    sound.play()
-                    pygame.time.wait(500)
-    elif activate_tts != "" and not isinstance(activate_tts, bool):
-        raise TypeError
     return result
 
-print(integer_to_vietnamese_numeral(n, region))
+print(integer_to_vietnamese_numeral(n, region, activate_tts))
+
