@@ -10,7 +10,7 @@ N = (["không", './vie/north/khong.ogg', './vie/sou/Khong.ogg'], ["một", './vi
      ["linh", './vie/north/linh.ogg', './vie/sou/Linh.ogg'], ["mươi", './vie/north/muoi2.ogg', './vie/sou/Muoi.ogg'],
      ["nghìn", './vie/north/nghin.ogg', './vie/sou/Nghin.ogg'], ["ngàn", './vie/north/ngan.ogg', './vie/sou/Ngan.ogg'],
      ["trăm", './vie/north/tram.ogg', './vie/sou/Tram.ogg'], ["triệu", './vie/north/trieu.ogg', './vie/sou/Trieu.ogg'],
-     ["tỉ", './vie/north/ty.ogg', './vie/sou/Ti.ogg'])
+     ["tỷ", './vie/north/ty.ogg', './vie/sou/Ti.ogg'])
 
 A = (["zero", './eng/Zero.ogg'], ["one",'./eng/one.ogg'], ["two",'./eng/two.ogg'],
      ["three",'./eng/three.ogg'], ["four",'./eng/four.ogg'], ["five",'./eng/five.ogg'],
@@ -19,7 +19,7 @@ A = (["zero", './eng/Zero.ogg'], ["one",'./eng/one.ogg'], ["two",'./eng/two.ogg'
      ['twelve','./eng/Twelve.ogg'],['thirteen','./eng/Thirteen'],['fourteen','./eng/Fourteen.ogg'],
      ['fifteen','./eng/Fifteen.ogg'],['sixteen','.eng/Sixteen.ogg'],['seventeen','./eng/Seventeen.ogg'],
      ['eighteen','./eng/Eighteen.ogg'],['nineteen','./eng/Nineteen.ogg'],['twenty','./eng/Twenty.ogg'],
-     ['thirty','./eng/Thirty.ogg'],['fourty','./eng/Fourty.ogg'],['fifty','./eng/Fifty.ogg'],
+     ['thirty','./eng/Thirty.ogg'],['forty','./eng/Fourty.ogg'],['fifty','./eng/Fifty.ogg'],
      ['sixty','./eng/Sixty.ogg'],['seventy','./eng/Seventy.ogg'],['eighty','./eng/Eighty.ogg'],
      ['ninety','./eng/Ninety.ogg'],['hundred','./eng/Hundred.ogg'],['thousand','./eng/Thousand.ogg'],
      ['million','./eng/Million.ogg'],['billion','./eng/Billion.ogg'],['and','./eng/And.ogg'])
@@ -154,17 +154,17 @@ def read_million_2(N, n):
     return ans
 
 
-#Đọc số hàng tỉ:
+#Đọc số hàng tỷ:
 def read_billion(N, n):
     ans = ""
     sohangty = n // 1000000000
     sohangtrieu = n % 1000000000
     if count_number(sohangty) == 2:
-        ans = read_2(N, sohangty) + " tỉ " + read_million_2(N, sohangtrieu)
+        ans = read_2(N, sohangty) + " tỷ " + read_million_2(N, sohangtrieu)
     elif count_number(sohangty) == 3:
-        ans = read_3_1(N, sohangty) + " tỉ " + read_million_2(N, sohangtrieu)
+        ans = read_3_1(N, sohangty) + " tỷ " + read_million_2(N, sohangtrieu)
     elif sohangty < 10 and sohangty > 0:
-        ans = N[sohangty][0] + " tỉ " + read_million_2(N, sohangtrieu)
+        ans = N[sohangty][0] + " tỷ " + read_million_2(N, sohangtrieu)
     elif sohangty == 0:
         ans = read_million(N, sohangtrieu)
     return ans
@@ -179,7 +179,12 @@ def integer_to_vietnamese_numeral(n, region = 'north', activate_tts = False):
         raise ValueError("Not positive integer.")
     if n > 999999999999:
         raise OverflowError
-    if n <= 10:
+    if n == 0:
+        if activate_tts:
+            sound = pygame.mixer.Sound('./vie/sou/Khong.ogg')
+            sound.play()
+        return N[0][0]
+    elif n <= 10 and n != 0:
         result = N[n][0]
     elif n > 10 and n <= 100:
         result = read_2(N,n)
@@ -214,7 +219,7 @@ def integer_to_vietnamese_numeral(n, region = 'north', activate_tts = False):
         else:
             raise ValueError
 
-    return result
+    return (' '.join(result.split())).strip()
 
 
 
@@ -254,6 +259,11 @@ def read_2_en(A, n):
             ans = "thirty" + "-" + A[sothu2][0]
     elif sodautien == 0:
         ans = A[sothu2][0]
+    elif sodautien == 4:
+        if sothu2 == 0:
+            ans = "forty"
+        else:
+            ans = "forty" + "-" + A[sothu2][0]
     else:
         if sothu2 == 0:
             ans = A[sodautien][0] + 'ty'
@@ -286,6 +296,8 @@ def read_3_2_en(A, n):
         ans = " and " + read_2_en(A, sohangchuc)
     elif sodautien != 0:
         ans = " and " + read_3_1_en(A, n)
+    elif sodautien == 0 and sothu2 == 0 and sothu3 != 0:
+        ans = " and " + A[sothu3][0]
     elif sodautien == 0 and sothu2 == 0 and sothu3 == 0:
         ans = ""
     return ans
@@ -316,7 +328,7 @@ def read_thousand_2_en(A, n):
     elif sohangngan < 10 and sohangngan > 0:
         ans = ", " + A[sohangngan][0] + " thousand" + read_3_2_en(A, sohangtram)
     elif sohangngan < 100:
-        ans = ', '+ read_3_2_en(A, sohangngan) + "thousand" + read_3_2_en(A, sohangtram)
+        ans = ', '+ read_3_2_en(A, sohangngan) + " thousand" + read_3_2_en(A, sohangtram)
     else:
         ans = ", " + read_thousand_en(A, n)
     return ans
@@ -353,7 +365,7 @@ def read_million_2_en(A, n):
     return ans
 
 
-# Đọc số hàng tỉ:
+# Đọc số hàng tỷ:
 def read_billion_en(A, n):
     ans = ""
     sohangty = n // 1000000000
@@ -376,7 +388,12 @@ def integer_to_english_numeral(n, activate_tts = False):
         raise ValueError("Not positive integer.")
     if n > 999999999999:
         raise OverflowError
-    if n <= 10:
+    if n == 0:
+        if activate_tts:
+            sound = pygame.mixer.Sound('./eng/Zero.ogg')
+            sound.play()
+        return 'zero'
+    elif n <= 10 and n != 0:
         result_en = A[n][0]
     elif n > 10 and n < 100:
         result_en = read_2_en(A, n)
@@ -394,24 +411,26 @@ def integer_to_english_numeral(n, activate_tts = False):
 
     elif activate_tts != "" and not isinstance(activate_tts, bool):
         raise TypeError
-    return result_en
+
+    result_en = result_en.replace(',  and', ', ')
+    return (' '.join(result_en.split())).strip()
 
 
-#Nhập số n:
-n = int(input("Enter n :"))
-#Chon kieu doc theo tieng Viet hay tieng Anh?
-choose=input("Enter E to choose english or V to choose vietnamese: ")
-a = input("Do you want to activate Text-to-speech? (True or False ?)") #Nhap cau hoi co muon kich hoat che do text to speech?
-if a == "True" or a == "true":
-    activate_tts = True                 #Chuyen doi cau tra loi sang kieu ky tu Boolean
-elif a == "False" or a == "false":
-    activate_tts = False
-else:
-    activate_tts = a                    #Neu cau tra loi khong phai la True /False, du lieu se khong chuyen doi ve kieu Boolean va raise TypeError
-if choose=="E" or choose == 'e':
-    print(integer_to_english_numeral(n, activate_tts))
-elif choose =='V' or choose =='v':
-    # Nhập region:
-    region = input("Enter region: ")
-    print(integer_to_vietnamese_numeral(n, region, activate_tts))
+# #Nhập số n:
+# n = int(input("Enter n :"))
+# #Chon kieu doc theo tieng Viet hay tieng Anh?
+# choose=input("Enter E to choose english or V to choose vietnamese: ")
+# a = input("Do you want to activate Text-to-speech? (True or False ?)") #Nhap cau hoi co muon kich hoat che do text to speech?
+# if a == "True" or a == "true":
+#     activate_tts = True                 #Chuyen doi cau tra loi sang kieu ky tu Boolean
+# elif a == "False" or a == "false":
+#     activate_tts = False
+# else:
+#     activate_tts = a                    #Neu cau tra loi khong phai la True /False, du lieu se khong chuyen doi ve kieu Boolean va raise TypeError
+# if choose=="E" or choose == 'e':
+#     print(integer_to_english_numeral(n, activate_tts))
+# elif choose =='V' or choose =='v':
+#     # Nhập region:
+#     region = input("Enter region: ")
+#     print(integer_to_vietnamese_numeral(n, region, activate_tts))
 
