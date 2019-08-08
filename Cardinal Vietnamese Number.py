@@ -1,3 +1,4 @@
+import os
 import pygame
 pygame.init()
 N = (["không", './vie/north/khong.ogg', './sou/Khong.ogg'], ["một", './vie/north/mot1.ogg', './sou/Mot.ogg'],
@@ -214,5 +215,10 @@ def integer_to_vietnamese_numeral(n, region = 'north', activate_tts = False):
 
     return result
 
+<<<<<<< HEAD:Cardinal_Numerals.py
 print(integer_to_vietnamese_numeral(n, region, activate_tts))
 
+=======
+print(integer_to_vietnamese_numeral(n, region))
+os.system("PAUSE")
+>>>>>>> 7c9ea9d296e59692d72a70a565fe592f16a1e5b3:Cardinal Vietnamese Number.py
